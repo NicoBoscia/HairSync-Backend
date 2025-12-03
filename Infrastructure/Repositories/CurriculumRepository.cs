@@ -12,10 +12,8 @@ namespace Infrastructure.Repositories
 {
     public class CurriculumRepository : RepositoryBase<Curriculum>, ICurriculumRepository
     {
-        private readonly ApplicationDbContext _dbcontext;
-        public CurriculumRepository(ApplicationDbContext dbcontext) : base(dbcontext)
+        public CurriculumRepository(ApplicationDbContext context) : base(context)
         {
-            _dbcontext = dbcontext;
         }
 
         public async Task<IEnumerable<Curriculum>> GetAllCurriculumsAsync()
