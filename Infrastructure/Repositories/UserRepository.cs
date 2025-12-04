@@ -1,5 +1,6 @@
-﻿using Domain.Interfaces;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.Enums;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,23 +11,42 @@ namespace Infrastructure.Repositories
 {
     public class UserRepository : RepositoryBase<User>, IUserRepository
     {
-        private readonly ApplicationDbContext _dbcontext;
-
-        public UserRepository(ApplicationDbContext dbcontext) : base(dbcontext)
+        public UserRepository(ApplicationDbContext context) : base(context)
         {
-            _dbcontext = dbcontext;
         }
 
         public async Task<User?> GetByEmailAsync(string email)
         {
             var normalizedEmail = email.ToLowerInvariant();
-            return await _dbcontext.Users
+            return await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == normalizedEmail);
+        }
+
+        public async Task<IEnumerable<User>> GetByRoleAsync(UserRole role)
+        {
+            return await _context.Users
+                .Where(u => u.Role == role)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _dbcontext.Users.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
+
+        public async Task<User?> GetByPhoneAsync(string phone)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Phone == phone);
+        }
+
+        public async Task<List<User>> GetBarbersByBranchAsync(int branchId)
+        {
+            return await _context.Users
+                .Where(u => u.Role == UserRole.Barber && u.BranchId == branchId)
+                .ToListAsync();
+        }
+
+
     }
 }

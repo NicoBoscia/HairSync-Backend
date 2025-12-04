@@ -1,4 +1,8 @@
-﻿using Domain.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,13 +13,25 @@ namespace Domain.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CurriculumId { get; set; }
+        public int Id { get; set; }
+
+        // Datos del Postulante
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; } = string.Empty;
 
         [Required]
-        public int UserId { get; set; }  
+        [MaxLength(50)]
+        public string Surname { get; set; } = string.Empty;
 
-        [ForeignKey("UserId")]
-        public User User { get; set; } = null!;
+        [Required]
+        [EmailAddress]
+        [MaxLength(60)]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(20)]
+        public string Phone { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(255)]
@@ -25,12 +41,8 @@ namespace Domain.Entities
         [MaxLength(500)]
         public string FilePath { get; set; } = string.Empty; 
 
-        [Required]
-        public DateTime UploadDate { get; set; } = DateTime.UtcNow;
+        public DateTime UploadDate { get; set; }
 
-        [Required]
-        public CurriculumStatus Status { get; set; } = CurriculumStatus.Pending;
-
+        public bool IsReviewed { get; set; } = false;
     }
 }
-

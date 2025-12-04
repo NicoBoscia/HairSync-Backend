@@ -8,38 +8,48 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    [Table("Appointments")]
     public class Appointment
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AppointmentId { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public int CustomerId { get; set; }
+        public DateTime AppointmentDateTime { get; set; }
 
-        [ForeignKey("CustomerId")]
-        public User Customer { get; set; } = null!;
+        [Required]
+        public AppointmentStatus Status { get; set; }
+
+        [Required]
+        public int ClientId { get; set; }
 
         [Required]
         public int BarberId { get; set; }
-
-        [ForeignKey("BarberId")]
-        public User Barber { get; set; } = null!;
 
         [Required]
         public int BranchId { get; set; }
 
         [Required]
-        public DateTime AppointmentDate { get; set; }
+        public int TreatmentId { get; set; }
 
         [Required]
-        [MaxLength(5)]
-        public string AppointmentTime { get; set; } = string.Empty;
+        public decimal Price { get; set; }
 
-        [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public Review? Review { get; set; }
+
+        [ForeignKey("ClientId")]
+        public virtual User Client { get; set; }
+
+        [ForeignKey("BarberId")]
+        public virtual User Barber { get; set; }
+
+        public virtual Branch Branch { get; set; }
+
+        public virtual Treatment Treatment { get; set; }
+    }
+
+    public enum AppointmentStatus
+    {
+        Confirmed,  
+        Cancelled  
     }
 }

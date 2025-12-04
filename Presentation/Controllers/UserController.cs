@@ -73,7 +73,13 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
-
+        [HttpGet("barbers")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetBarbers()
+        {
+            var barbers = await _userService.GetAllBarbersAsync();
+            return Ok(barbers);
+        }
 
         private int GetCurrentUserId()
         {

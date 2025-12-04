@@ -17,9 +17,12 @@ namespace Infrastructure
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+
         public DbSet<Treatment> Treatments { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Branch> Branches { get; set; } = null!;
+        public DbSet<Curriculum> Curriculums { get; set; } = null!;
 
 
 
@@ -54,15 +57,65 @@ namespace Infrastructure
                     .HasDefaultValue(UserRole.Client);
 
                 entity.Property(u => u.Phone)
-                    .HasMaxLength(20);
+                    .HasMaxLength(10);
 
-                // relacion con branch
+                entity.HasIndex(u => u.Phone)
+                    .IsUnique();
+
                 entity.HasOne(u => u.Branch)
                   .WithMany()
                   .HasForeignKey(u => u.BranchId)
                   .OnDelete(DeleteBehavior.SetNull);
 
             });
+
+
+            modelBuilder.Entity<Appointment>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.Property(e => e.Status)
+                      .IsRequired()
+                      .HasConversion<string>()
+                      .HasMaxLength(20);
+
+
+                entity.Property(a => a.AppointmentDateTime)
+                    .IsRequired();
+
+                entity.HasOne(a => a.Client)
+                      .WithMany() 
+                      .HasForeignKey(a => a.ClientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(a => a.Barber)
+                      .WithMany() 
+                      .HasForeignKey(a => a.BarberId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(a => a.Branch)
+                      .WithMany() 
+                      .HasForeignKey(a => a.BranchId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(a => a.Treatment)
+                      .WithMany() 
+                      .HasForeignKey(a => a.TreatmentId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(a => a.Price)
+                    .IsRequired()
+                    .HasColumnType("decimal(18,2)");
+
+                entity.HasIndex(a => a.ClientId)
+                    .HasDatabaseName("IX_Appointment_ClientId");
+
+                entity.HasIndex(a => a.BranchId)
+                    .HasDatabaseName("IX_Appointment_BranchId");
+
+                entity.HasIndex(a => new { a.BarberId, a.AppointmentDateTime })
+                    .HasDatabaseName("IX_Appointment_BarberId_DateTime");
+            });
+
 
             modelBuilder.Entity<Treatment>(entity =>
             {
@@ -110,26 +163,50 @@ namespace Infrastructure
                 );
             });
 
-            modelBuilder.Entity<Review>(entity =>
+
+            modelBuilder.Entity<Curriculum>(entity =>
             {
-                entity.HasKey(r => r.ReviewId);
+                entity.HasKey(c => c.Id); 
 
-                entity.Property(r => r.Comment)
+                // Propiedades de la Postulación
+                entity.Property(c => c.Name)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(50);
 
-                entity.Property(r => r.Rating)
+                entity.Property(c => c.Surname)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(c => c.Email)
+                    .IsRequired()
+                    .HasMaxLength(60);
+
+                entity.Property(c => c.Phone)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(c => c.FileName)
+                    .IsRequired()
+                    .HasMaxLength(255); 
+
+                entity.Property(c => c.FilePath)
+                    .IsRequired()
+                    .HasMaxLength(500); 
+
+                entity.Property(c => c.UploadDate)
                     .IsRequired();
 
-                // 1 review por turno
-                entity.HasIndex(r => r.AppointmentId).IsUnique();
-
-                entity.HasOne(r => r.Appointment)
-                      .WithOne(a => a.Review)
-                      .HasForeignKey<Review>(r => r.AppointmentId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(c => c.IsReviewed)
+                    .IsRequired()
+                    .HasDefaultValue(false);
             });
 
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.User)
+            .WithMany(u => u.Reviews)   
+            .HasForeignKey(r => r.UserId) 
+            .OnDelete(DeleteBehavior.Cascade); 
+      
             modelBuilder.Entity<Branch>(entity =>
             {
                 entity.HasKey(b => b.BranchId);
@@ -142,7 +219,6 @@ namespace Infrastructure
                       .IsRequired()
                       .HasMaxLength(200);
 
-                // Las 2 sucursales fijas
                 entity.HasData(
                     new Branch 
                     {

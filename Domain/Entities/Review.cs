@@ -5,19 +5,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 [Table("Reviews")]
 public class Review
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ReviewId { get; set; }
+    public int Id { get; set; }
 
-    [Required]
-    public int AppointmentId { get; set; }
-
-    [ForeignKey("AppointmentId")]
-    public Appointment Appointment { get; set; } = null!;
-
-    [Required, Range(1, 5)]
+    [Range(1, 5)]
     public int Rating { get; set; }
 
-    [Required, MaxLength(255)]
-    public string Comment { get; set; } = string.Empty;
+    [Required]
+    public string Text { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+
+    public int UserId { get; set; }
+
+    public User User { get; set; }
 }

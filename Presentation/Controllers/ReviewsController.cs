@@ -1,4 +1,5 @@
-﻿using Application.External;
+﻿using Application.Exceptions;
+using Application.External;
 using Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,58 +8,48 @@ using System.Security.Claims;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/[controller]")]
     public class ReviewsController : ControllerBase
     {
-        private readonly IReviewService _service;
+        private readonly IReviewService _reviewService;
 
-        public ReviewsController(IReviewService service)
+        public ReviewsController(IReviewService reviewService)
         {
-            _service = service;
+            _reviewService = reviewService;
         }
 
-        [HttpGet("appointments/{appointmentId:int}/review")]
-        [Authorize] // dueño del turno o admin (validación la hace el service cuando exista IAppointmentRepository)
-        public async Task<ActionResult<ReviewDto>> GetByAppointment(int appointmentId)
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllReviews()
         {
-            var (userId, isAdmin) = GetAuthContext(User);
-            var review = await _service.GetByAppointmentAsync(appointmentId, userId, isAdmin);
-            return review is null ? NotFound() : Ok(review);
+            var reviews = await _reviewService.GetAllReviewsAsync();
+            return Ok(reviews);
         }
 
-        [HttpPost("appointments/{appointmentId:int}/review")]
-        [Authorize(Roles = "Client,Admin")]
-        public async Task<ActionResult<ReviewDto>> Create(int appointmentId, [FromBody] CreateReviewDto dto)
+        [HttpPost]
+        [Authorize(Roles = "Client")]
+        public async Task<IActionResult> CreateReview([FromBody] CreateReviewDto reviewDto)
         {
-            var (userId, _) = GetAuthContext(User);
-            var created = await _service.CreateAsync(appointmentId, userId, dto);
-            return CreatedAtAction(nameof(GetByAppointment), new { appointmentId }, created);
-        }
+            try
+            {
+                var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
+                {
+                    return Unauthorized("No se pudo identificar al usuario.");
+                }
 
-        [HttpPut("reviews/{id:int}")]
-        [Authorize]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateReviewDto dto)
-        {
-            var (userId, isAdmin) = GetAuthContext(User);
-            await _service.UpdateAsync(id, userId, dto, isAdmin);
-            return NoContent();
-        }
+                await _reviewService.CreateReviewAsync(reviewDto, userId);
 
-        [HttpDelete("reviews/{id:int}")]
-        [Authorize]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var (userId, isAdmin) = GetAuthContext(User);
-            await _service.DeleteAsync(id, userId, isAdmin);
-            return NoContent();
-        }
-
-        private static (int userId, bool isAdmin) GetAuthContext(ClaimsPrincipal user)
-        {
-            var idStr = user.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0";
-            var id = int.TryParse(idStr, out var parsed) ? parsed : 0;
-            var isAdmin = user.IsInRole("Admin");
-            return (id, isAdmin);
+                return StatusCode(201, "Review creada exitosamente.");
+            }
+            catch (AlreadyReviewedException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ocurrió un error inesperado.", details = ex.Message });
+            }
         }
     }
 }
