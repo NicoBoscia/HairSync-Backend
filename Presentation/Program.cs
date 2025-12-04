@@ -121,11 +121,14 @@ builder.Services.AddHttpClient(JokeApiClientName, client =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("EnableSwaggerInProduction"))
+app.UseSwagger();
+
+// 2. Con configuración para que se vea en la raíz
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HairSync API V1");
+    c.RoutePrefix = string.Empty;
+});
 
 app.UseHttpsRedirection();
 
