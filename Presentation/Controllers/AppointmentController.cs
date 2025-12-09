@@ -87,7 +87,12 @@ namespace Presentation.Controllers
         [Authorize]
         public async Task<IActionResult> GetAppointmentById(int id)
         {
-            return Ok();
+            var appointment = await _appointmentService.GetAppointmentByIdAsync(id);
+            if (appointment == null)
+            {
+                return NotFound(new { message = "Turno no encontrado." });
+            }
+            return Ok(appointment);
         }
 
 

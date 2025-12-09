@@ -257,6 +257,11 @@ namespace Application.Services
             }).ToList();
         }
 
+        public async Task<AppointmentViewDto> GetAppointmentByIdAsync(int appointmentId)
+        {
+            var appointment = await _appointmentRepo.GetByIdWithDetailsAsync(appointmentId);
+            return MapToViewDto(appointment);
+        }
     }
 }
 

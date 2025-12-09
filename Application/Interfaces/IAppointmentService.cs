@@ -23,6 +23,7 @@ namespace Application.Interfaces
         Task<List<string>> GetAvailableHoursAsync(int branchId, DateOnly date, int? barberId = null);
 
         Task<List<BarberDto>> GetBarbersByBranchAsync(int branchId);
+        Task<AppointmentViewDto> GetAppointmentByIdAsync(int appointmentId);
     }
 }
 
