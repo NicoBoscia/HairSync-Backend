@@ -30,7 +30,7 @@ jobs:
         run: dotnet build HairSync-Backend.sln --configuration Release --no-restore
 
       - name: dotnet publish
-        run: dotnet publish HairSync-Backend.sln -c Release -o ./myapp"
+        run: dotnet publish HairSync-Backend.sln -c Release -o ./myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
