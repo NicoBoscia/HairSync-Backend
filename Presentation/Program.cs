@@ -40,8 +40,7 @@ builder.Services.AddCors(options =>
                       });
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ITreatmentService, TreatmentService>();
 builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
