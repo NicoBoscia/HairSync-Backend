@@ -122,11 +122,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 
-// 2. Con configuración para que se vea en la raíz
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HairSync API V1");
-});
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
@@ -139,5 +135,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/", async context =>
+{
+    context.Response.Redirect("/swagger/index.html");
+    await Task.CompletedTask;
+});
 
 app.Run();
