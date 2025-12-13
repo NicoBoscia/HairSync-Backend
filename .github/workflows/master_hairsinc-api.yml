@@ -71,9 +71,7 @@ jobs:
 
 
       - name: Update database with EF Core migrations
-        run: dotnet ef database update --project Infrastructure/Infrastructure.csproj --startup-project Presentation/Presentation.csproj
-        env: 
-          ASPNETCORE_ENVIROMENT: Development
+        run: dotnet ef database update --connection "${{ secrets.SQL_CONNECTION_STRING }}" --project Infrastructure/Infrastructure.csproj --startup-project Presentation/Presentation.csproj
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
