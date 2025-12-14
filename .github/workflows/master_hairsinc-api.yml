@@ -58,6 +58,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
+          path: ./myapp
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -66,12 +67,8 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D7993621AE914D6F82F97E814749D629 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_386298CD971D46589A17447A410CCC48 }}
 
-      - name: Set DB connection string in Azure Web App settings
-        run: az webapp config appsettings set --resource-group "HairSync" --name "HairSinc-API" --settings 'ConnectionStrings__DBConnectionString=${{ secrets.SQL_CONNECTION_STRING }}'
-
       - name: Install dotnet ef tool
         run: dotnet tool install --global dotnet-ef --version 8.*
-
 
       - name: Update database with EF Core migrations
         run: dotnet ef database update --connection "${{ secrets.SQL_CONNECTION_STRING }}" --project Infrastructure/Infrastructure.csproj --startup-project Presentation/Presentation.csproj
@@ -82,5 +79,5 @@ jobs:
         with:
           app-name: 'HairSinc-API'
           slot-name: 'Production'
-          package: .
+          package: ./myapp
           
