@@ -2,7 +2,7 @@
 using Application.Models;
 using Domain.Entities;
 using Domain.Interfaces;
-using Application.Exceptions;
+using Domain.Exceptions;
 
 namespace Application.Services
 {

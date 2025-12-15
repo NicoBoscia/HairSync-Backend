@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Application.Models;
-using Application.Exceptions;
+using Domain.Exceptions;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Hosting;

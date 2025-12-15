@@ -3,7 +3,7 @@ using Application.Models;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
-using Application.Exceptions;
+using Domain.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

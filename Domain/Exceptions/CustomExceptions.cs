@@ -1,4 +1,4 @@
-﻿namespace Application.Exceptions
+﻿namespace Domain.Exceptions
 {
     /// <summary>
     /// Excepción para errores de solicitud incorrecta (HTTP 400).

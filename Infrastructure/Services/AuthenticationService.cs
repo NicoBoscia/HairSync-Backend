@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Services;
 using Domain.Entities;
-using Application.Exceptions;
+using Domain.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

@@ -1,4 +1,4 @@
-﻿using Application.Exceptions;
+﻿using Domain.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
