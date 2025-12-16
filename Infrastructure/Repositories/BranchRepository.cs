@@ -9,17 +9,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class BranchRepository: IBranchRepository
+    public class BranchRepository: RepositoryBase<Branch> , IBranchRepository
     {
-        private readonly ApplicationDbContext _context;
-        public BranchRepository(ApplicationDbContext context)
+        public BranchRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
-        }
-
-        public async Task<IEnumerable<Branch>> ListAllAsync()
-        {
-            return await _context.Branches.ToListAsync();
         }
     }
 }

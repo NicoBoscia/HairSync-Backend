@@ -2,11 +2,9 @@
 
 namespace Domain.Interfaces
 {
-    public interface IReviewRepository
+    public interface IReviewRepository : IRepositoryBase<Review>
     {
         Task<IEnumerable<Review>> GetAllWithUserAsync();
-
-        Task AddAsync(Review review);
         Task<bool> HasUserReviewedAsync(int userId);
     }
 }

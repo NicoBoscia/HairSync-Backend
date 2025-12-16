@@ -7,15 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories 
 {
-    public class TreatmentRepository : ITreatmentRepository
+    public class TreatmentRepository : RepositoryBase<Treatment> , ITreatmentRepository
     {
-        private readonly ApplicationDbContext _context;
 
-        public TreatmentRepository(ApplicationDbContext context)
+        public TreatmentRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<IEnumerable<Treatment>> GetAllAsync()
@@ -26,11 +24,6 @@ namespace Infrastructure.Repositories
         public async Task<Treatment> GetByIdAsync(int treatmentId)
         {
             return await _context.Treatments.FindAsync(treatmentId);
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }

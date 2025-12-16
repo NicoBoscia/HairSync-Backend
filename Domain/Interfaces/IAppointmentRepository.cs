@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IAppointmentRepository
+    public interface IAppointmentRepository : IRepositoryBase<Appointment>
     {
         Task<Appointment> GetByIdWithDetailsAsync(int id);
         Task<IEnumerable<Appointment>> GetAllWithDetailsAsync();
@@ -17,10 +17,6 @@ namespace Domain.Interfaces
         Task<IEnumerable<Appointment>> GetByBarberIdAndDateAsync(int barberId, DateTime date);
 
         Task<bool> CheckBarberAvailabilityAsync(int barberId, DateTime requestedStartTime, int durationInMinutes);
-
-        Task AddAsync(Appointment appointment);
-        void Update(Appointment appointment);
-        Task<bool> SaveChangesAsync();
     }
 }
 

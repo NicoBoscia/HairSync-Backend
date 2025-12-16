@@ -4,13 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class ReviewRepository : IReviewRepository
+    public class ReviewRepository : RepositoryBase<Review> , IReviewRepository
     {
-        private readonly ApplicationDbContext _context;
 
-        public ReviewRepository(ApplicationDbContext context)
+        public ReviewRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<IEnumerable<Review>> GetAllWithUserAsync()
@@ -21,11 +19,6 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddAsync(Review review)
-        {
-            await _context.Reviews.AddAsync(review);
-            await _context.SaveChangesAsync();
-        }
         public async Task<bool> HasUserReviewedAsync(int userId)
         {
             return await _context.Reviews.AnyAsync(r => r.UserId == userId);

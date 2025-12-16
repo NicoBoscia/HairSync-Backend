@@ -9,13 +9,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentRepository : RepositoryBase<Appointment> , IAppointmentRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public AppointmentRepository(ApplicationDbContext context)
+        public AppointmentRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
         private IQueryable<Appointment> GetAppointmentsWithDetails()
@@ -86,21 +83,6 @@ namespace Infrastructure.Repositories
                 );
 
             return !isOverlapping;
-        }
-
-        public async Task AddAsync(Appointment appointment)
-        {
-            await _context.Appointments.AddAsync(appointment);
-        }
-
-        public void Update(Appointment appointment)
-        {
-            _context.Appointments.Update(appointment);
-        }
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            return (await _context.SaveChangesAsync()) > 0;
         }
     }
 }

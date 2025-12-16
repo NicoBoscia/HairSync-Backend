@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface ITreatmentRepository
+    public interface ITreatmentRepository : IRepositoryBase<Treatment>
     {
         Task<IEnumerable<Treatment>> GetAllAsync();
 
         Task<Treatment> GetByIdAsync(int treatmentId);
-
-        Task SaveChangesAsync();
     }
 }

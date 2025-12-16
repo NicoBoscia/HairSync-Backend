@@ -45,6 +45,7 @@ namespace Application.Services
             };
 
             await _reviewRepository.AddAsync(review);
+            await _reviewRepository.SaveChangesAsync();
         }
         private bool isAdmin(int requesterId, int customerId)
         {

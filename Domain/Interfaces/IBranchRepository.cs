@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IBranchRepository
+    public interface IBranchRepository : IRepositoryBase<Branch>
     {
-        Task<IEnumerable<Branch>> ListAllAsync();   
     }
 }

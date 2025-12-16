@@ -135,7 +135,7 @@ namespace Application.Services
             }
 
             appointment.Status = AppointmentStatus.Cancelled;
-            _appointmentRepo.Update(appointment);
+            await _appointmentRepo.UpdateAsync(appointment);
             await _appointmentRepo.SaveChangesAsync();
         }
 

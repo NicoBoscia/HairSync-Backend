@@ -12,7 +12,6 @@
 
     /// <summary>
     /// Excepción para errores de autenticación (HTTP 401).
-    /// OJO: A menudo, el framework maneja esto automáticamente.
     /// Úsala si en tu lógica de negocio necesitas forzar un fallo de autenticación.
     /// </summary>
     public class UnauthorizedException : Exception

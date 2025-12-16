@@ -21,7 +21,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<BranchDTO>> GetAllAsync()
         {
-            var branches = await _branchRepository.ListAllAsync();
+            var branches = await _branchRepository.ListAsync();
             return branches.Select(MapToDto);
         }
 
